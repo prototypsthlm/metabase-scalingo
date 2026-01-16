@@ -7,7 +7,12 @@ set -e
 
 # Translate various Heroku environment variables to Metabase equivalents
 
-if [ "$PORT" ]; then
+# When using nginx buildpack, Metabase should run on port 3000
+# and nginx will run on $PORT and proxy to Metabase
+# Set METABASE_PORT environment variable on Scalingo to override
+if [ "$METABASE_PORT" ]; then
+    export MB_JETTY_PORT="$METABASE_PORT"
+elif [ "$PORT" ]; then
     export MB_JETTY_PORT="$PORT"
 fi
 
